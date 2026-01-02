@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const reservas = {};
   const feriados = ['2026-01-01', '2026-12-25'];
   const senhaAdmin = 'SecretariaIPTC2026';
-  const ENDPOINT = "https://script.google.com/macros/s/AKfycbztzK2grTpfU2Vs4O8Ew5O8bz73Y6Q5EhVxugd06nWTv-Bg1bz2E3dKLidvEtT0i1Kj/exec";
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbyptEXGc9JBLtbXXC6W75-OB3Y0fZ84o3i5Muy-ejVShHqQiPLi_Te1JGNRr-79x9ue/exec";
 
   let usuarioAdmin = false;
   let dataSelecionada = null;
