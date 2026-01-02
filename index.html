@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Reservas</title>
+
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/main.min.css" rel="stylesheet">
+
+  <!-- CSS próprio -->
+  <link href="style.css" rel="stylesheet">
+
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/locales-all.global.min.js"></script>
+
+  <!-- JS próprio -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Reservas de Salas IPTC</h1>
+    <div id="admin-login">
+      <input type="password" id="senha-admin" placeholder="Senha de administrador">
+      <button id="btn-login">Login Admin</button>
+      <span id="admin-status"></span>
+      <button id="btn-logout">Logout Admin</button>
+    </div>
+  </header>
+
+  <!-- Modal de reservas -->
+  <div id="modal-reserva" class="modal">
+    <div class="modal-content">
+      <span id="btn-close-modal" class="close">&times;</span>
+      <h2>Reservas do dia <span id="data-exibida"></span></h2>
+      <div id="lista-reservas"></div>
+
+      <form id="form-reserva">
+        <input type="text" id="input-nome" placeholder="Nome completo" maxlength="50" required>
+        <input type="text" id="input-telefone" placeholder="Telefone" maxlength="15" required pattern="\d+">
+        <input type="email" id="input-email" placeholder="Email (opcional)" maxlength="50">
+        <button type="submit">Adicionar Reserva</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Painel administrativo avançado -->
+  <div id="painel-admin" class="painel-admin">
+    <div class="painel-header">
+      <h3>Painel de Reservas</h3>
+      <button id="btn-fechar-painel">&times;</button>
+    </div>
+    <div id="abas-painel">
+      <button class="aba-painel ativo" data-aba="todas">Todas Reservas</button>
+      <button class="aba-painel" data-aba="por-dia">Por Dia</button>
+    </div>
+    <div id="conteudo-painel">
+      <div id="todas-reservas" class="conteudo-aba"></div>
+      <div id="reservas-dia" class="conteudo-aba" style="display:none;"></div>
+    </div>
+  </div>
+<button id="btn-abrir-painel">Dashboard</button>
+
+  <main>
+    <div id="calendar"></div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,481 @@
+/* =======================
+   RESET BÁSICO
+======================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =======================
+   BACKGROUND GLOBAL (SUAVE, FRIENDLY)
+======================= */
+html, body {
+  min-height: 100%;
+}
+
+body {
+  background: linear-gradient(
+    180deg,
+    #ebe9ff 0%,
+    #f6d9f4 35%,
+    #ffe6db 65%,
+    hsl(0, 100%, 90%) 100%
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #000000;
+  padding: 15px;
+}
+
+/* =======================
+   CABEÇALHO
+======================= */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 12px 16px;
+  background: linear-gradient(145deg, #64b5f6, #42a5f5);
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header h1 {
+  font-size: 1.6rem;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* =======================
+   LOGIN ADMIN
+======================= */
+#admin-login {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#admin-login input {
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 1px solid #64b5f6;
+  background: rgba(255,255,255,0.7);
+  color: #333;
+  font-size: 0.85rem;
+}
+
+#admin-login input:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(100,181,246,0.6);
+}
+
+#btn-login {
+  display: none;
+   background-color: #ff0c0c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+#btn-login:hover {
+ background-color: #4c00ff;
+  box-shadow: 0 6px 18px rgba(66,165,245,0.5);
+}
+
+#btn-logout {
+  display: none;
+   background-color: #ff0c0c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+#btn-logout:hover {
+ background-color: #4c00ff;
+  box-shadow: 0 6px 18px rgba(66,165,245,0.5);
+}
+
+/* =======================
+   CALENDÁRIO
+======================= */
+#calendar {
+  max-width: 880px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.85);
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  font-size: 0.9rem;
+}
+
+/* Cabeçalho dos dias */
+.fc-col-header-cell {
+  background: linear-gradient(145deg, #90caf9, #64b5f6);
+  color: #01579b;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Número do dia */
+.fc-daygrid-day-number {
+  color: #01579b;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Células */
+.fc-daygrid-day {
+  min-height: 110px;
+}
+
+.fc-daygrid-day-frame {
+  position: relative;
+  min-height: 110px;
+  padding-bottom: 32px;
+  overflow: visible;
+}
+
+.fc-daygrid-day:hover {
+  background: rgba(100,181,246,0.1);
+}
+
+/* =======================
+   EVENTOS
+======================= */
+.fc-event {
+  background: linear-gradient(145deg, #ff8a65, #ff7043);
+  border: none;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 6px rgba(255,138,101,0.3);
+}
+
+.fc-event-title {
+  white-space: normal;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* =======================
+   BOTÃO RESERVAR DIA
+======================= */
+.btn-reservar-dia {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #64b5f6, #42a5f5);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(100,181,246,0.4);
+  z-index: 999;
+}
+
+.btn-reservar-dia:hover {
+  background: linear-gradient(145deg, #42a5f5, #2196f3);
+}
+
+/* =======================
+   MODAL
+======================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.25); /* leve escurecimento */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #bbdefb, #90caf9);
+  width: 400px;
+  max-width: 90%;
+  padding: 24px 20px 40px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(33,150,243,0.25);
+  border: 1px solid #42a5f5;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+/* Botão fechar modal */
+#btn-close-modal {
+  background-color: transparent;
+  border: none;
+  color: #ff0000d0;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: transform 0.2s, color 0.2s;
+}
+
+#btn-close-modal:hover {
+  color: #ff9696;
+  transform: scale(1.2);
+}
+
+#btn-close-modal:active {
+  transform: scale(0.9);
+}
+
+/* FORM DENTRO DO MODAL */
+#form-reserva {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid #90caf9;
+}
+
+#form-reserva input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #90caf9;
+  background: rgba(255,255,255,0.95);
+  color: #333;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+}
+
+#form-reserva input::placeholder {
+  color: #90a4ae;
+  font-style: italic;
+}
+
+#form-reserva input:hover {
+  border-color: #42a5f5;
+  box-shadow: 0 2px 8px rgba(66,165,245,0.2);
+}
+
+#form-reserva input:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 8px rgba(33,150,243,0.3);
+}
+
+#form-reserva button {
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #64b5f6, #42a5f5);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(100,181,246,0.4);
+  transition: all 0.3s ease;
+}
+
+#form-reserva button:hover {
+  background: linear-gradient(145deg, #42a5f5, #2196f3);
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(66,165,245,0.5);
+}
+
+#form-reserva button:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 10px rgba(66,165,245,0.4);
+}
+
+
+/* =======================
+   PAINEL DE RESERVAS
+======================= */
+.painel-admin {
+  position: fixed;
+  top: 65px;
+  right: 0;
+  width: 340px;
+  height: calc(100% - 70px);
+  background: rgba(255, 255, 255, 0.95);
+  border-left: 2px solid #64b5f6;
+  box-shadow: -4px 0 20px rgba(100,181,246,0.2);
+  padding: 16px;
+  overflow-y: auto;
+  z-index: 150;
+  border-radius: 0 12px 12px 0;
+
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Painel ativo */
+.painel-admin.ativo {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Cabeçalho do painel */
+.painel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.painel-header h3 {
+  font-size: 1.2rem;
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.painel-header button {
+  background-color: transparent;
+  border: none;
+  color: #f44336;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.painel-header button:hover {
+  color: #ff8a80;
+  transform: scale(1.2);
+}
+
+/* Abas do painel */
+#abas-painel {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.aba-painel {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #e3f2fd;
+  color: #1565c0;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.aba-painel.ativo,
+.aba-painel:hover {
+  background: #64b5f6;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 3px 8px rgba(100,181,246,0.3);
+}
+
+/* Conteúdo do painel */
+.conteudo-aba {
+  max-height: calc(100% - 100px);
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 8px;
+  background: #f1f8ff;
+  box-shadow: inset 0 0 5px rgba(100,181,246,0.1);
+}
+
+/* Itens de reserva */
+.conteudo-aba .reserva-item {
+  background: #ffffff;
+  border-left: 4px solid #64b5f6;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 6px rgba(100,181,246,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.conteudo-aba .reserva-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(100,181,246,0.2);
+}
+
+.conteudo-aba .reserva-item button {
+  background-color: #ff5252;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: all 0.25s ease;
+}
+
+.conteudo-aba .reserva-item button:hover {
+  background-color: #ff1744;
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(255,23,68,0.3);
+}
+
+.conteudo-aba .reserva-item button:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 4px rgba(255,23,68,0.2);
+}
+
+/* Scroll suave */
+.painel-admin::-webkit-scrollbar {
+  width: 6px;
+}
+.painel-admin::-webkit-scrollbar-thumb {
+  background-color: #64b5f6;
+  border-radius: 3px;
+}
+.painel-admin::-webkit-scrollbar-track {
+  background: #e3f2fd;
+}
+
+/* =======================
+   BOTÃO ABRIR PAINEL
+======================= */
+#btn-abrir-painel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(145deg, #64b5f6, #42a5f5);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 22px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(100,181,246,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#btn-abrir-painel.visivel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+#btn-abrir-painel.oculto {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
