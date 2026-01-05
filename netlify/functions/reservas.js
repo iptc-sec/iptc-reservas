@@ -1,6 +1,3 @@
-// Se estiver usando Node 18+ no Netlify, não precisa instalar node-fetch
-import fetch from "node-fetch";
-
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbxwF094pq0JOZWIalz7FFbWMyBFahwOQERU_SVYFR3XE2fm0xbtsFj3UDFfsO38CfXF/exec";
 
 export async function handler(event) {
@@ -12,12 +9,10 @@ export async function handler(event) {
 
   try {
     if (event.httpMethod === "OPTIONS") {
-      // Para preflight CORS
       return { statusCode: 200, headers, body: "" };
     }
 
     if (event.httpMethod === "GET") {
-      // Buscar reservas do Apps Script
       const res = await fetch(ENDPOINT);
       const data = await res.json();
       return { statusCode: 200, headers, body: JSON.stringify(data) };
@@ -26,7 +21,6 @@ export async function handler(event) {
     if (event.httpMethod === "POST") {
       const body = JSON.parse(event.body);
 
-      // Envia para o Google Apps Script
       const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
