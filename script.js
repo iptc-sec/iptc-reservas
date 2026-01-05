@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const reservas = {};
   const feriados = ['2026-01-01', '2026-12-25'];
   const senhaAdmin = 'SecretariaIPTC2026';
-  const SERVERLESS_URL = "/.netlify/functions/reservas"; // função serverless Netlify
 
   let usuarioAdmin = false;
   let dataSelecionada = null;
@@ -110,11 +109,11 @@ document.addEventListener('DOMContentLoaded', function () {
   calendar.render();
 
   // -----------------------
-  // CARREGAR RESERVAS (via serverless GET)
+  // CARREGAR RESERVAS DO SERVERLESS
   // -----------------------
   async function carregarReservas() {
     try {
-      const res = await fetch(SERVERLESS_URL);
+      const res = await fetch('/.netlify/functions/reservas');
       const data = await res.json();
 
       if (!data.success) {
@@ -122,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      data.reservas.forEach(r => {
+      (data.reservas || []).forEach(r => {
         if (!reservas[r.data]) reservas[r.data] = [];
         reservas[r.data].push({ nome: r.nome, numero: r.numero, email: r.email });
         calendar.addEvent({ title: r.nome.split(' ')[0], start: r.data, allDay: true });
@@ -136,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
   carregarReservas();
 
   // -----------------------
-  // ADICIONAR RESERVA (serverless)
+  // ADICIONAR RESERVA VIA SERVERLESS
   // -----------------------
   formReserva.onsubmit = async e => {
     e.preventDefault();
@@ -176,19 +175,19 @@ document.addEventListener('DOMContentLoaded', function () {
     if (usuarioAdmin) atualizarPainelAdmin();
     formReserva.reset();
 
-    // envia para serverless
+    // Envia para a função serverless
     try {
-      const response = await fetch(SERVERLESS_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/.netlify/functions/reservas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, numero, email, data: dataSelecionada })
       });
 
       const result = await response.json();
       if (result.success) {
-        console.log("Reserva enviada ao Google Calendar via serverless!");
+        console.log("Reserva enviada com sucesso!");
       } else {
-        console.error("Erro:", result.error);
+        console.error("Erro ao salvar:", result.error);
         alert("Reserva salva localmente, mas não foi possível salvar no Calendar.");
       }
     } catch (err) {
