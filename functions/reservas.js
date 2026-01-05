@@ -13,7 +13,7 @@ exports.handler = async function(event, context) {
     }
 
     const data = JSON.parse(event.body);
-
+ 
     // Envia para o Apps Script
     const res = await fetch(ENDPOINT, {
       method: "POST",
