@@ -1,41 +1,57 @@
-// Netlify Function para enviar reservas ao Google Apps Script
-const fetch = require("node-fetch"); // se usar Node 18+ do Netlify, não precisa instalar
+// Se estiver usando Node 18+ no Netlify, não precisa instalar node-fetch
+import fetch from "node-fetch";
 
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbxwF094pq0JOZWIalz7FFbWMyBFahwOQERU_SVYFR3XE2fm0xbtsFj3UDFfsO38CfXF/exec";
 
-exports.handler = async function(event, context) {
+export async function handler(event) {
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
+  };
+
   try {
-    if (event.httpMethod !== "POST") {
+    if (event.httpMethod === "OPTIONS") {
+      // Para preflight CORS
+      return { statusCode: 200, headers, body: "" };
+    }
+
+    if (event.httpMethod === "GET") {
+      // Buscar reservas do Apps Script
+      const res = await fetch(ENDPOINT);
+      const data = await res.json();
+      return { statusCode: 200, headers, body: JSON.stringify(data) };
+    }
+
+    if (event.httpMethod === "POST") {
+      const body = JSON.parse(event.body);
+
+      // Envia para o Google Apps Script
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
       return {
-        statusCode: 405,
-        body: JSON.stringify({ error: "Método não permitido" }),
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(data),
       };
     }
 
-    const data = JSON.parse(event.body);
- 
-    // Envia para o Apps Script
-    const res = await fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-
-    const result = await res.json();
-
     return {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*", // liberação CORS para o frontend
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
-      body: JSON.stringify(result)
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ error: "Método não permitido" }),
     };
   } catch (err) {
     return {
       statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
+      headers,
       body: JSON.stringify({ success: false, error: err.message }),
     };
   }
-};
+}
