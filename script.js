@@ -3,14 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const reservas = {};
   const feriados = ['2026-01-01', '2026-12-25'];
   const senhaAdmin = 'SecretariaIPTC2026';
-
   let usuarioAdmin = false;
   let dataSelecionada = null;
   let btnReservar = null;
 
-  const btnLogin = document.getElementById('btn-login');
-  const btnLogout = document.getElementById('btn-logout');
-  const adminStatus = document.getElementById('admin-status');
   const modal = document.getElementById('modal-reserva');
   const btnCloseModal = document.getElementById('btn-close-modal');
   const listaReservas = document.getElementById('lista-reservas');
@@ -19,6 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const inputNome = document.getElementById('input-nome');
   const inputTelefone = document.getElementById('input-telefone');
   const inputEmail = document.getElementById('input-email');
+
+  const btnLogin = document.getElementById('btn-login');
+  const btnLogout = document.getElementById('btn-logout');
+  const adminStatus = document.getElementById('admin-status');
 
   const painelAdmin = document.getElementById('painel-admin');
   const todasReservas = document.getElementById('todas-reservas');
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // -----------------------
   // MODAL
   // -----------------------
-  btnCloseModal.onclick = () => modal.style.display = 'none';
+  btnCloseModal.onclick = () => (modal.style.display = 'none');
   modal.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
 
   function destacarDia(data) {
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
   calendar.render();
 
   // -----------------------
-  // CARREGAR RESERVAS DO SERVERLESS
+  // FUNÇÃO PARA CARREGAR RESERVAS DO SERVERLESS
   // -----------------------
   async function carregarReservas() {
     try {
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      (data.reservas || []).forEach(r => {
+      data.reservas.forEach(r => {
         if (!reservas[r.data]) reservas[r.data] = [];
         reservas[r.data].push({ nome: r.nome, numero: r.numero, email: r.email });
         calendar.addEvent({ title: r.nome.split(' ')[0], start: r.data, allDay: true });
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
   carregarReservas();
 
   // -----------------------
-  // ADICIONAR RESERVA VIA SERVERLESS
+  // ADICIONAR RESERVA
   // -----------------------
   formReserva.onsubmit = async e => {
     e.preventDefault();
@@ -168,24 +168,23 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // Adiciona localmente
     reservas[dataSelecionada].push({ nome, numero, email });
     calendar.addEvent({ title: nome.split(' ')[0], start: dataSelecionada, allDay: true });
     atualizarLista();
     if (usuarioAdmin) atualizarPainelAdmin();
     formReserva.reset();
 
-    // Envia para a função serverless
+    // Envia para o serverless
     try {
       const response = await fetch('/.netlify/functions/reservas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, numero, email, data: dataSelecionada })
       });
-
       const result = await response.json();
+
       if (result.success) {
-        console.log("Reserva enviada com sucesso!");
+        console.log("Reserva salva no Google Calendar via serverless!");
       } else {
         console.error("Erro ao salvar:", result.error);
         alert("Reserva salva localmente, mas não foi possível salvar no Calendar.");
