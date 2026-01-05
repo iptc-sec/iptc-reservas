@@ -108,42 +108,35 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   calendar.render();
-async function carregarReservas() {
-  try {
-    const res = await fetch(ENDPOINT);
-    const data = await res.json();
-
-    if (!data.success) {
-      console.error(data.error);
-      return;
-    }
-
-    data.reservas.forEach(r => {
-      if (!reservas[r.data]) reservas[r.data] = [];
-
-      reservas[r.data].push({
-        nome: r.nome,
-        numero: r.numero,
-        email: r.email
-      });
-
-      calendar.addEvent({
-        title: r.nome.split(' ')[0],
-        start: r.data,
-        allDay: true
-      });
-    });
-
-    atualizarPainelAdmin();
-  } catch (err) {
-    console.error('Erro ao carregar reservas:', err);
-  }
-}
-
-carregarReservas();
 
   // -----------------------
-  // ADICIONAR RESERVA + INTEGRAÇÃO GOOGLE CALENDAR
+  // CARREGAR RESERVAS DO GOOGLE APPS SCRIPT
+  // -----------------------
+  async function carregarReservas() {
+    try {
+      const res = await fetch(ENDPOINT);
+      const data = await res.json();
+
+      if (!data.success) {
+        console.error("Erro:", data.error);
+        return;
+      }
+
+      data.reservas.forEach(r => {
+        if (!reservas[r.data]) reservas[r.data] = [];
+        reservas[r.data].push({ nome: r.nome, numero: r.numero, email: r.email });
+        calendar.addEvent({ title: r.nome.split(' ')[0], start: r.data, allDay: true });
+      });
+
+      atualizarPainelAdmin();
+    } catch (err) {
+      console.error("Erro ao carregar reservas:", err);
+    }
+  }
+  carregarReservas();
+
+  // -----------------------
+  // ADICIONAR RESERVA COM FETCH CORRIGIDO
   // -----------------------
   formReserva.onsubmit = async e => {
     e.preventDefault();
@@ -176,14 +169,14 @@ carregarReservas();
       return;
     }
 
-    // Adiciona a reserva localmente
+    // Adiciona localmente
     reservas[dataSelecionada].push({ nome, numero, email });
     calendar.addEvent({ title: nome.split(' ')[0], start: dataSelecionada, allDay: true });
     atualizarLista();
     if (usuarioAdmin) atualizarPainelAdmin();
     formReserva.reset();
 
-    // Envia a reserva para o Google Calendar via Web App
+    // Envia para Google Calendar
     try {
       const response = await fetch(ENDPOINT, {
         method: 'POST',
@@ -193,14 +186,14 @@ carregarReservas();
 
       const result = await response.json();
       if (result.success) {
-        console.log('Reserva enviada ao Google Calendar com sucesso!');
+        console.log("Reserva enviada ao Google Calendar!");
       } else {
-        console.error('Erro ao enviar a reserva:', result.error);
-        alert('Reserva criada localmente, mas não foi possível salvar no Google Calendar.');
+        console.error("Erro ao salvar:", result.error);
+        alert("Reserva salva localmente, mas não foi possível salvar no Calendar.");
       }
     } catch (err) {
-      console.error('Erro na requisição para o Web App:', err);
-      alert('Reserva criada localmente, mas não foi possível salvar no Google Calendar.');
+      console.error("Erro na requisição:", err);
+      alert("Reserva salva localmente, mas não foi possível salvar no Calendar.");
     }
   };
 
