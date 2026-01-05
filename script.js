@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const reservas = {};
   const feriados = ['2026-01-01', '2026-12-25'];
   const senhaAdmin = 'SecretariaIPTC2026';
-  const ENDPOINT = "https://script.google.com/macros/s/AKfycbxGQiMMOmGu0Nx_I8CMNlYn-BIWTW3ZD276dsM-WxYARlbPRRUOJIdze5QHTAkJgxc/exec";
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbxwF094pq0JOZWIalz7FFbWMyBFahwOQERU_SVYFR3XE2fm0xbtsFj3UDFfsO38CfXF/exec";
 
   let usuarioAdmin = false;
   let dataSelecionada = null;
@@ -108,6 +108,39 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   calendar.render();
+async function carregarReservas() {
+  try {
+    const res = await fetch(ENDPOINT);
+    const data = await res.json();
+
+    if (!data.success) {
+      console.error(data.error);
+      return;
+    }
+
+    data.reservas.forEach(r => {
+      if (!reservas[r.data]) reservas[r.data] = [];
+
+      reservas[r.data].push({
+        nome: r.nome,
+        numero: r.numero,
+        email: r.email
+      });
+
+      calendar.addEvent({
+        title: r.nome.split(' ')[0],
+        start: r.data,
+        allDay: true
+      });
+    });
+
+    atualizarPainelAdmin();
+  } catch (err) {
+    console.error('Erro ao carregar reservas:', err);
+  }
+}
+
+carregarReservas();
 
   // -----------------------
   // ADICIONAR RESERVA + INTEGRAÇÃO GOOGLE CALENDAR
