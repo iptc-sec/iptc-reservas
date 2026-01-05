@@ -2,8 +2,9 @@
 
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbxwF094pq0JOZWIalz7FFbWMyBFahwOQERU_SVYFR3XE2fm0xbtsFj3UDFfsO38CfXF/exec";
 
-export async function handler(event) {
-  // Permite CORS
+// Para Netlify Functions você usa export const handler
+export const handler = async function(event) {
+  // Headers CORS
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -11,7 +12,7 @@ export async function handler(event) {
     "Content-Type": "application/json"
   };
 
-  // Requisições OPTIONS (preflight) só retornam 200
+  // Preflight CORS
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -20,10 +21,21 @@ export async function handler(event) {
   }
 
   try {
+    // GET → repassa para o Apps Script
     if (event.httpMethod === "GET") {
-      // Apenas repassa GET para o Apps Script
       const res = await fetch(ENDPOINT);
-      const data = await res.json();
+      const text = await res.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ success: false, error: "Apps Script retornou JSON inválido", raw: text })
+        };
+      }
 
       return {
         statusCode: 200,
@@ -32,28 +44,39 @@ export async function handler(event) {
       };
     }
 
+    // POST → repassa para o Apps Script
     if (event.httpMethod === "POST") {
-      const data = JSON.parse(event.body);
+      const payload = JSON.parse(event.body);
 
       const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       });
 
-      const result = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ success: false, error: "Apps Script retornou JSON inválido", raw: text })
+        };
+      }
 
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify(result)
+        body: JSON.stringify(data)
       };
     }
 
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ success: false, error: "Método não permitido" })
+      body: JSON.stringify({ success: false, error: "Método HTTP não permitido" })
     };
   } catch (err) {
     return {
@@ -62,4 +85,4 @@ export async function handler(event) {
       body: JSON.stringify({ success: false, error: err.message })
     };
   }
-}
+};
