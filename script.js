@@ -114,7 +114,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // -----------------------
   async function carregarReservas() {
     try {
-      const res = await fetch(ENDPOINT);
+      // GET simples
+      const url = `${ENDPOINT}?acao=listar`;
+      const res = await fetch(url);
       const data = await res.json();
 
       if (!data.success) {
@@ -136,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
   carregarReservas();
 
   // -----------------------
-  // ADICIONAR RESERVA COM FETCH CORRIGIDO
+  // ADICIONAR RESERVA (GET + parâmetros)
   // -----------------------
   formReserva.onsubmit = async e => {
     e.preventDefault();
@@ -176,17 +178,21 @@ document.addEventListener('DOMContentLoaded', function () {
     if (usuarioAdmin) atualizarPainelAdmin();
     formReserva.reset();
 
-    // Envia para Google Calendar
-    try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, numero, email, data: dataSelecionada })
-      });
+    // Monta URL GET
+    const params = new URLSearchParams({
+      acao: 'add',
+      nome,
+      numero,
+      email,
+      data: dataSelecionada
+    });
 
+    try {
+      const response = await fetch(`${ENDPOINT}?${params.toString()}`);
       const result = await response.json();
+
       if (result.success) {
-        console.log("Reserva enviada ao Google Calendar!");
+        console.log("Reserva enviada ao Google Calendar via GET!");
       } else {
         console.error("Erro ao salvar:", result.error);
         alert("Reserva salva localmente, mas não foi possível salvar no Calendar.");
